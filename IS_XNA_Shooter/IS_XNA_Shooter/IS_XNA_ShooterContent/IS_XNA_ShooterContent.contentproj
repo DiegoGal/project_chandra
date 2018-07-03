@@ -314,7 +314,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Graphics\Hub\base256.png">
+    <Compile Include="Graphics\Hud\base256.png">
       <Name>base256</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -328,16 +328,6 @@
     </Compile>
     <Compile Include="Graphics\Splash\splash_gameover_2.jpg">
       <Name>splash_gameover_2</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Graphics\Splash\splash_mainmenu_1.jpg">
-      <Name>splash_mainmenu_1</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Graphics\Splash\splash_mainmenu_2.jpg">
-      <Name>splash_mainmenu_2</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -371,23 +361,22 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Graphics\Images\Captain.png">
+    <Compile Include="Graphics\Portraits\Captain.png">
       <Name>Captain</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Graphics\Images\Pilot.png">
+    <Compile Include="Graphics\Portraits\Pilot.png">
       <Name>Pilot</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Graphics\Images\PilotCyborg.png">
+    <Compile Include="Graphics\Portraits\PilotCyborg.png">
       <Name>PilotCyborg</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
-
   <ItemGroup>
     <Compile Include="Graphics\Ships\enemyLaser.png">
       <Name>enemyLaser</Name>
@@ -482,6 +471,394 @@
   <ItemGroup>
     <Compile Include="Graphics\Backgrounds\bgB00.jpg">
       <Name>bgB00</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\Smoke\smoke01.png">
+      <Name>smoke01</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\Evolution\background_1.png">
+      <Name>background_1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\Evolution\ButtonContinue.png">
+      <Name>ButtonContinue</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\Evolution\ButtonPreview.png">
+      <Name>ButtonPreview</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\Evolution\Buttons.png">
+      <Name>Buttons</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\Evolution\frame.png">
+      <Name>frame</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\Evolution\measures.png">
+      <Name>measures</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\Portraits\allyourbase.png">
+      <Name>allyourbase</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Motorwerk.spritefont">
+      <Name>Motorwerk</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\base.png">
+      <Name>base</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\LifeBars\baseLifeBar.png">
+      <Name>baseLifeBar</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\PowerUps\spritesPowerUp02_80x80.png">
+      <Name>spritesPowerUp02_80x80</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Audio\FXEffects\laser_shot_red.wav">
+      <Name>laser_shot_red</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+    <Compile Include="Audio\FXEffects\PowerUpBlue.wav">
+      <Name>PowerUpBlue</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+    <Compile Include="Audio\FXEffects\PowerUpGreen.wav">
+      <Name>PowerUpGreen</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+    <Compile Include="Audio\FXEffects\PowerUpRed.wav">
+      <Name>PowerUpRed</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\Splash\splash_mainmenu_asset01_1.jpg">
+      <Name>splash_mainmenu_asset01_1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\Splash\splash_mainmenu_asset01_2.jpg">
+      <Name>splash_mainmenu_asset01_2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\Splash\splash_mainmenu_asset02_1.png">
+      <Name>splash_mainmenu_asset02_1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\Splash\splash_mainmenu_asset02_2.png">
+      <Name>splash_mainmenu_asset02_2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\Splash\splash_mainmenu_asset03.png">
+      <Name>splash_mainmenu_asset03</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\Ships\sprites_shield80x80.png">
+      <Name>sprites_shield80x80</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\PowerUps\banPowerUp320x320.png">
+      <Name>banPowerUp320x320</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\Menu\scores_2.png">
+      <Name>scores_2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Audio\FXEffects\PowerUpOrange.wav">
+      <Name>PowerUpOrange</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\MapEditor\Screen1\backgroundMapEditor_1Screen1.jpg">
+      <Name>backgroundMapEditor_1Screen1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\MapEditor\Screen1\backgroundMapEditor_2Screen1.jpg">
+      <Name>backgroundMapEditor_2Screen1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\MapEditor\Screen2\backgroundMapEditor_1 - copia.jpg">
+      <Name>backgroundMapEditor_1 - copia</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\MapEditor\Screen2\Background\backgroundMapEditor_1.jpg">
+      <Name>backgroundMapEditor_1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\MapEditor\Screen2\Background\backgroundMapEditor_2.jpg">
+      <Name>backgroundMapEditor_2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\MapEditor\Screen2\Objects\boxSizesMapEditor_2.png">
+      <Name>boxSizesMapEditor_2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\MapEditor\Screen2\Objects\widthHeightMapEditor_1.png">
+      <Name>widthHeightMapEditor_1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\MapEditor\Screen2\Objects\widthHeightMapEditor_2.png">
+      <Name>widthHeightMapEditor_2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\MapEditor\Screen3\buttonsSaveLoadPreview.png">
+      <Name>buttonsSaveLoadPreview</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\Splash\splash_mainmenu_asset01_3.jpg">
+      <Name>splash_mainmenu_asset01_3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\Splash\splash_start_3.jpg">
+      <Name>splash_start_3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\Ships\sprites120x120.png">
+      <Name>sprites120x120</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\Ships\sprites_shield120x120.png">
+      <Name>sprites_shield120x120</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Audio\Music\music_04-Street.wma">
+      <Name>music_04-Street</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
+    <Compile Include="Audio\Music\music_evolution_02-TakeOff.wma">
+      <Name>music_evolution_02-TakeOff</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
+    <Compile Include="Audio\Music\music_menu_28-Metempsychosis.wma">
+      <Name>music_menu_28-Metempsychosis</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\Ships\SuperFinalBoss\anim01.png">
+      <Name>anim01</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\Ships\SuperFinalBoss\anim02.png">
+      <Name>anim02</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\Ships\SuperFinalBoss\anim03.png">
+      <Name>anim03</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\Ships\SuperFinalBoss\anim04.png">
+      <Name>anim04</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\Splash\splash_demofin_1.png">
+      <Name>splash_demofin_1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\Splash\splash_demofin_2.png">
+      <Name>splash_demofin_2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\Splash\splash_demofin_3.png">
+      <Name>splash_demofin_3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Graphics\Splash\splash_demofin_4.png">
+      <Name>splash_demofin_4</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Audio\Music\music_08-Badlands.wma">
+      <Name>music_08-Badlands</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
+    <Compile Include="Audio\Music\music_12-Factory.wma">
+      <Name>music_12-Factory</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\Splash\splash_credits.png">
+      <Name>splash_credits</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Audio\Music\music_credits-Blackheart,TSFH.wma">
+      <Name>music_credits-Blackheart,TSFH</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\MapEditor\Screen1\backgroundMapEditor_3Screen1.jpg">
+      <Name>backgroundMapEditor_3Screen1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\MapEditor\Screen2\Background\backgroundMapEditor_3.jpg">
+      <Name>backgroundMapEditor_3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\laserShotAnim3.png">
+      <Name>laserShotAnim3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\mouse_pointer.png">
+      <Name>mouse_pointer</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Audio\Music\music_01.RulesOfNature.wma">
+      <Name>music_01.RulesOfNature</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Audio\FXEffects\laser_shot_02.wav">
+      <Name>laser_shot_02</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\Explosions\explosion02.png">
+      <Name>explosion02</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Audio\FXEffects\laser_long_01.wav">
+      <Name>laser_long_01</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\Explosions\explosion03.png">
+      <Name>explosion03</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Audio\FXEffects\explosion01.wav">
+      <Name>explosion01</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\Ships\SuperFinalBoss\pinguinoBullet.png">
+      <Name>pinguinoBullet</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

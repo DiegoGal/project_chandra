@@ -19,7 +19,7 @@ namespace IS_XNA_Shooter
         /// <summary>
         /// String that indicates the current version of the project
         /// </summary>
-        public String currentVersion = "0.5";
+        public String currentVersion = "0.8";
 
         /// <summary>
         /// XNA's atribute for graphics
@@ -31,6 +31,11 @@ namespace IS_XNA_Shooter
         /// </summary>
         SpriteBatch spriteBatch;
 
+        /// <summary>
+        /// indicates de resolution mode
+        /// 1: 1920x1080; 2: 1280x720; 3: 1024x768
+        /// </summary>
+        public static int resolutionMode;
  
 
         /// <summary>
@@ -40,11 +45,27 @@ namespace IS_XNA_Shooter
         {
             starting,
             mainMenu,
+            scoresMenu,
             playing,
             pause,
             gameOver,
-            playingVideo
+            playingVideo,
+            evolution,
+            mapMenuEditor,
+            splashFinalDemo,
+            splashCredits
         };
+
+        public enum levelName
+        {
+            TestEnemies,
+            LevelA1,
+            LevelA2,
+            LevelADefense1,
+            TestParticles
+        };
+
+        public levelName currentNameLevel;
 
         /// <summary>
         /// Video introduction mode story
@@ -66,7 +87,7 @@ namespace IS_XNA_Shooter
         /// <summary>
         /// Indicates if the god mode is active
         /// </summary>
-        public static bool godMode = false;
+        public static bool godMode = true;
 
         /// <summary>
         /// Screen's width
@@ -186,7 +207,21 @@ namespace IS_XNA_Shooter
         /// Menu of game over
         /// </summary>
         private MenuGameOver menuGameOver;
-        
+
+        /// <summary>
+        /// Menu of the scores
+        /// </summary>
+        private MenuScores menuScores;
+
+        private SplashFinalDemo menuFinalDemo;
+
+        private SplashCredits splashCredits;
+
+        private String currentGameName;
+        // TODO! esto es una ñapa, se hace ahora así para que funcione
+        // el menu de scores para meter una nueva puntuación en nivel
+        // que se ha jugado último
+
         /// <summary>
         /// Game
         /// </summary>
@@ -196,6 +231,11 @@ namespace IS_XNA_Shooter
         /// Player
         /// </summary>
         public Player       player;
+
+        //map menu editor
+        public MenuMapEditor menuMapEditor;
+
+        private Evolution screenEvolution;
        
         /// <summary>
         /// Player lifes
@@ -208,13 +248,17 @@ namespace IS_XNA_Shooter
         public enum shootType
         {
             normal,
+            red
         };
+
+        private Sprite mousePointerSprite;
 
         // fuentes:
         /// <summary>
         /// courier new 12 regular
         /// </summary>
-        public static SpriteFont fontDebug; 
+        public static SpriteFont fontDebug;
+        public static SpriteFont fontMotorwerk;
 
         /// <summary>
         /// SuperGame's constructor
@@ -228,8 +272,22 @@ namespace IS_XNA_Shooter
             audio = new Audio(Content);
 
             int resX = 1280, resY = 720;
-            //int resX = 1366, resY = 768;
-            //int resX = 1024, resY = 768;
+            resolutionMode = 3;
+            switch (resolutionMode)
+            {
+                case 1:
+                    resX = 1920;
+                    resY = 1080;
+                    break;
+                case 2:
+                    resX = 1280;
+                    resY = 720;
+                    break;
+                case 3:
+                    resX = 1024;
+                    resY = 768;
+                    break;
+            }
             graphics.PreferredBackBufferWidth = resX;
             graphics.PreferredBackBufferHeight = resY;
             graphics.IsFullScreen = false;
@@ -245,7 +303,7 @@ namespace IS_XNA_Shooter
         /// </summary>
         protected override void Initialize()
         {
-            IsMouseVisible = true;
+            IsMouseVisible = false;
 
             drawFramesCounter = drawFramesCounterAux = 0;
             updateFramesCounter = updateFramesCounterAux = 0;
@@ -274,21 +332,41 @@ namespace IS_XNA_Shooter
 
             grManager.LoadContent("MenuStart"); // se cargan los recursos del menu start
             grManager.LoadContent("MenuMain"); // se cargan los recursos del menu
+            grManager.LoadContent("MenuScores"); // se cargan los recursos del menu de scores
             grManager.LoadContent("MenuIngame"); // se cargan los recursos del menu ingame
             grManager.LoadContent("MenuGameOver");// se cargan los recursos del menu gameover
             grManager.LoadContent("Other"); // all type of "little" resources
+            grManager.LoadContent("MapEditor"); //all contents to map editor
             audio.LoadContent(0);
 
             fontDebug = Content.Load<SpriteFont>("FontDebug");
+            fontMotorwerk = Content.Load<SpriteFont>("Motorwerk");
 
             // Create the Menus
             menuStart =     new MenuStart(this);
             menu =          new Menu(this);
             menuIngame =    new MenuIngame(this);
             menuGameOver =  new MenuGameOver(this);
+            menuScores =    new MenuScores(this);
+            menuScores.Load();
+            menuFinalDemo = new SplashFinalDemo();
+            // this is for testing the splashfinaldemo
+            /*grManager.LoadContent("SplashFinalDemo");
+            menuFinalDemo.Initialize();
+            currentState = gameState.splashFinalDemo;*/
+            splashCredits = new SplashCredits(this);
+            // this is for testing the credits splash
+            /*grManager.LoadContent("SplashCredits");
+            audio.LoadContent(2); // load the song for the credits
+            splashCredits.Initialize();
+            currentState = gameState.splashCredits;*/
 
-            // Create the player
+            // Create the player and the screenEvolution
             player = new Player(playerLifes);
+            screenEvolution = new Evolution(Content, this);
+            menu.setEvolution(screenEvolution);
+
+            mousePointerSprite = new Sprite(false, pointer, 0, GRMng.mousePointer01);
         }
 
         /// <summary>
@@ -300,6 +378,7 @@ namespace IS_XNA_Shooter
             // TODO: Unload any non ContentManager content here
         }
 
+        #region UPDATE
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -311,6 +390,10 @@ namespace IS_XNA_Shooter
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
+
+            //Put or quit full screen
+            if (Keyboard.GetState().IsKeyDown(Keys.OemComma))
+                this.graphics.ToggleFullScreen();
 
             // Time since the last method's execution
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -345,6 +428,7 @@ namespace IS_XNA_Shooter
             // actual position of the mouse:
             pointer.X = Mouse.GetState().X;
             pointer.Y = Mouse.GetState().Y;
+            mousePointerSprite.position = pointer;
 
             // Game's update:
             switch (currentState)
@@ -363,8 +447,14 @@ namespace IS_XNA_Shooter
 
                     if (debug && Keyboard.GetState().IsKeyDown(Keys.T))
                         NewGameATest();
+                    if (debug && Keyboard.GetState().IsKeyDown(Keys.Y))
+                        NewGameAForTestingParticles();
+                    if (debug && Keyboard.GetState().IsKeyDown(Keys.U))
+                        NewGameSuperFinalBoss();
+                    if (debug && Keyboard.GetState().IsKeyDown(Keys.Q))
+                        NewStoryFinalDemo();
 
-                    menu.Update(Mouse.GetState().X, Mouse.GetState().Y);
+                    menu.Update(Mouse.GetState().X, Mouse.GetState().Y, deltaTime);
 
                     if (Mouse.GetState().LeftButton == ButtonState.Pressed)
                         menu.Click(Mouse.GetState().X, Mouse.GetState().Y);
@@ -373,14 +463,34 @@ namespace IS_XNA_Shooter
 
                     break;
 
+                case gameState.scoresMenu:
+
+                    menuScores.Update(Mouse.GetState().X, Mouse.GetState().Y, deltaTime);
+
+                    /*if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                        menuScores.Click(Mouse.GetState().X, Mouse.GetState().Y);
+                    else if (Mouse.GetState().LeftButton == ButtonState.Released)
+                        menuScores.Unclick(Mouse.GetState().X, Mouse.GetState().Y);*/
+
+                    if (ControlMng.leftClickPreshed)
+                        menuScores.Click(ControlMng.lastClickX, ControlMng.lastClickY);
+                    else if (ControlMng.leftClickReleased)
+                        menuScores.Unclick(Mouse.GetState().X, Mouse.GetState().Y);
+
+                    break;
+
                 case gameState.playing:
+                    totalTime += deltaTime;
 
                     game.Update(gameTime);
-                    totalTime += deltaTime;
+                    if (game.IsFinished())
+                    {
+                        LevelComplete();
+                    }
 
                     if (Keyboard.GetState().IsKeyDown(Keys.P) ||
                         GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed)
-                        currentState = gameState.pause;
+                        EnterPause();
 
                     break;
 
@@ -413,11 +523,29 @@ namespace IS_XNA_Shooter
                         videoPlayer.Stop();
                     }
                     break;
+
+                case gameState.evolution:
+                    screenEvolution.Update(deltaTime, Mouse.GetState());
+                    break;
+
+                case gameState.mapMenuEditor:
+                    menuMapEditor.Update(Mouse.GetState().X, Mouse.GetState().Y);
+                    break;
+
+                case gameState.splashFinalDemo:
+                    menuFinalDemo.Update(deltaTime);
+                    break;
+
+                case gameState.splashCredits:
+                    splashCredits.Update(deltaTime);
+                    break;
             }
 
             base.Update(gameTime);
         }
+        #endregion
 
+        #region DRAW
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>fe
@@ -434,6 +562,7 @@ namespace IS_XNA_Shooter
             {
                 case gameState.starting:
                     menuStart.Draw(spriteBatch);
+                    mousePointerSprite.Draw(spriteBatch);
                     spriteBatch.DrawString(fontDebug, "build version: " + currentVersion,
                         new Vector2((screenWidth / 2) - fontDebug.MeasureString("build version: " + currentVersion).X/2, 6),
                         Color.White, 0, Vector2.Zero, 1,
@@ -442,6 +571,12 @@ namespace IS_XNA_Shooter
 
                 case gameState.mainMenu:
                     menu.Draw(spriteBatch);
+                    mousePointerSprite.Draw(spriteBatch);
+                    break;
+
+                case gameState.scoresMenu:
+                    menuScores.Draw(spriteBatch);
+                    mousePointerSprite.Draw(spriteBatch);
                     break;
 
                 case gameState.playing:
@@ -451,14 +586,34 @@ namespace IS_XNA_Shooter
                 case gameState.pause:
                     game.Draw(spriteBatch);
                     menuIngame.Draw(spriteBatch);
+                    mousePointerSprite.Draw(spriteBatch);
                     break;
 
                 case gameState.gameOver:
                     menuGameOver.Draw(spriteBatch);
+                    mousePointerSprite.Draw(spriteBatch);
                     break;
 
                 case gameState.playingVideo:
                     spriteBatch.Draw(videoPlayer.GetTexture(), new Rectangle(0, 0, screenWidth, screenHeight), Color.White);
+                    break;
+
+                case gameState.evolution:
+                    screenEvolution.Draw(spriteBatch);
+                    mousePointerSprite.Draw(spriteBatch);
+                    break;
+
+                case gameState.mapMenuEditor:
+                    menuMapEditor.Draw(spriteBatch);
+                    mousePointerSprite.Draw(spriteBatch);
+                    break;
+
+                case gameState.splashFinalDemo:
+                    menuFinalDemo.Draw(spriteBatch);
+                    break;
+
+                case gameState.splashCredits:
+                    splashCredits.Draw(spriteBatch);
                     break;
             }
 
@@ -477,6 +632,21 @@ namespace IS_XNA_Shooter
             spriteBatch.End();
 
             base.Draw(gameTime);
+        } // Draw
+        #endregion
+
+        /// <summary>
+        /// Method that cotrols when the Focus fron the Game is lost
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        protected override void OnDeactivated(object sender, EventArgs args)
+        {
+            base.OnDeactivated(sender, args);
+
+            // when the focus is lost the game is paused
+            if (currentState == gameState.playing)
+                EnterPause();
         }
 
 
@@ -487,12 +657,41 @@ namespace IS_XNA_Shooter
         /// </summary>
         private void NewGameATest()
         {
+            Audio.StopMusic();
+            currentGameName = "TestEnemies";
+            grManager.LoadHud();
             grManager.LoadContent("LevelA1"); // Load the gameA's level 1 resources
             audio.LoadContent(1);
-            game = new GameA(this, player, 0, GRMng.textureAim, GRMng.textureCell,
-                /*ShipVelocity*/200f, /*ShipLife*/100000);
+            game = new GameA(this, player, "TestEnemies", GRMng.textureAim, GRMng.textureCell,
+                screenEvolution);
             currentState = gameState.playing; // Change game's state to game mode
-            grManager.UnloadContent("LevelA1"); // Unload the menu's resources
+            grManager.UnloadContent("MenuMain"); // Unload the menu's resources
+        }
+
+        private void NewGameAForTestingParticles()
+        {
+            Audio.StopMusic();
+            currentGameName = "TestParticles";
+            grManager.LoadHud();
+            grManager.LoadContent("LevelA1"); // Load the gameA's level 1 resources
+            audio.LoadContent(1);
+            game = new GameAForTestingParticles(this, player, GRMng.textureAim, GRMng.textureCell,
+                screenEvolution);
+            currentState = gameState.playing; // Change game's state to game mode
+            grManager.UnloadContent("MenuMain"); // Unload the menu's resources
+        }
+
+        private void NewGameSuperFinalBoss()
+        {
+            Audio.StopMusic();
+            currentGameName = "LevelBFinalBoss";
+            grManager.LoadHud();
+            grManager.LoadContent("LevelBFinalBoss");
+            audio.LoadContent(1);
+            LvlMng.LoadContent("LevelBFinalBoss"); // Load the level map 2
+            game = new GameB(this, player, "LevelBFinalBoss", GRMng.textureAim, screenEvolution);
+            currentState = gameState.playing; // Change game's state to game mode
+            grManager.UnloadContent("MenuMain"); // Unload the menu's resources
         }
 
         /// <summary>
@@ -500,7 +699,15 @@ namespace IS_XNA_Shooter
         /// </summary>
         public void NewStory()
         {
+            Audio.StopMusic();
+
+            currentGameName = "Story";
+
+            grManager.LoadHud();
             grManager.LoadVideo(1);
+            grManager.LoadContent("SplashFinalDemo");
+
+            menuFinalDemo.Initialize();
             // introduction video
             videoPlayer = new VideoPlayer();
             videoPlayer.Play(GRMng.videoIntroStory);
@@ -508,96 +715,168 @@ namespace IS_XNA_Shooter
 
             duration = 0;
 
-            game = new GameStory(this, grManager, audio, LvlMng, player,
-                /*ShipVelocity*/200f, /*ShipLife*/100);
+            game = new GameStory(this, grManager, audio, LvlMng, player, screenEvolution);
 
             //currentState = gameState.playing; // Change game's state to game mode
             //grManager.UnloadContent(2); 
             grManager.UnloadContent("MenuMain"); /// Unload the main menu's resources
         }
 
+        private void NewStoryFinalDemo()
+        {
+            Audio.StopMusic();
+
+            currentGameName = "Story";
+
+            grManager.LoadHud();
+            grManager.LoadVideo(1);
+            grManager.LoadContent("SplashFinalDemo");
+
+            menuFinalDemo.Initialize();
+            // introduction video
+            videoPlayer = new VideoPlayer();
+            videoPlayer.Play(GRMng.videoIntroStory);
+            currentState = gameState.playingVideo;
+
+            duration = 0;
+
+            game = new GameStoryFinalDemo(this, grManager, audio, LvlMng, player, screenEvolution);
+
+            grManager.UnloadContent("MenuMain"); /// Unload the main menu's resources
+        }
+
         /// <summary>
         /// Create a new Survival
         /// </summary>
-        /// <param name="lvl">The number of the level</param>
-        public void newSurvival(int lvl)
+        /// <param name="cad">The number of the level</param>
+        public void NewSurvival(String cad)
         {
-            grManager.LoadContent("LevelA1");  // Load the gameA's level 1 resources
-            audio.LoadContent(1);
-            LvlMng.LoadContent(lvl); // Load XML
+            Audio.StopMusic();
 
-            game = new GameA(this, player, 1, GRMng.textureAim, GRMng.textureCell,
-                /*ShipVelocity*/200f, /*ShipLife*/100);
+            currentGameName = cad;
+
+            grManager.LoadHud();
+            grManager.LoadContent(cad);  // Load the gameA's level 1 resources
+            audio.LoadContent(1);
+            LvlMng.LoadContent(cad); // Load XML
+
+            game = new GameC(this, player, cad, GRMng.textureAim, GRMng.textureCell, screenEvolution);
 
             currentState = gameState.playing; // Change game's state to game mode
 
-            LvlMng.UnloadContent(lvl);
+            LvlMng.UnloadContent(cad);
             grManager.UnloadContent("MenuMain"); /// Unload the main menu's resources
         }
 
         /// <summary>
         /// Create a new Killer
         /// </summary>
-        /// <param name="lvl">The number of the level</param>
-        public void newKiller(int lvl)
+        /// <param name="cad">The number of the level</param>
+        public void NewKiller(String cad)
         {
-            grManager.LoadContent("LevelA1"); // Load the gameB's level 1 resources
-            audio.LoadContent(1);
-            LvlMng.LoadContent(lvl); // Load XML
+            Audio.StopMusic();
 
-            game = new GameA(this, player, 1, GRMng.textureAim, GRMng.textureCell,
-                /*ShipVelocity*/200f, /*ShipLife*/100);
+            currentGameName = cad;
+
+            grManager.LoadHud();
+            grManager.LoadContent(cad); // Load the gameB's level 1 resources
+            audio.LoadContent(1);
+            LvlMng.LoadContent(cad); // Load XML
+
+            game = new GameA(this, player, cad, GRMng.textureAim, GRMng.textureCell, screenEvolution);
 
             currentState = gameState.playing; // Change game's state to game mode
 
-            LvlMng.UnloadContent(lvl);
+            LvlMng.UnloadContent(cad);
             grManager.UnloadContent("MenuMain"); /// Unload the main menu's resources
         }
 
         /// <summary>
         /// Create a new Defense
         /// </summary>
-        /// <param name="lvl">The number of the level</param>
-        public void newDefense(int lvl)
+        /// <param name="cad">The number of the level</param>
+        public void NewDefense(String cad)
         {
-            grManager.LoadContent("LevelB1"); // Load the gameB's level 1 resources
-            audio.LoadContent(1);
-            LvlMng.LoadContent(lvl);
+            Audio.StopMusic();
 
-            game = new GameA(this, player, 1, GRMng.textureAim, GRMng.textureCell,
-                /*ShipVelocity*/200f, /*ShipLife*/100);
+            currentGameName = cad;
+
+            grManager.LoadHud();
+            grManager.LoadContent(cad); // Load the gameA's level 1 resources
+            audio.LoadContent(1);
+            LvlMng.LoadContent(cad);
+
+            game = new GameADefense(this, player, cad, GRMng.textureAim, GRMng.textureCell,
+                /*ShipVelocity*/200f, /*ShipLife*/100, new Vector2(300, 300), GRMng.frameWidthBase, GRMng.frameHeightBase,
+                GRMng.numAnimsBase, GRMng.frameCountBase, GRMng.loopingBase, SuperGame.frameTime12, GRMng.textureBase,
+                GRMng.frameWidthBaseLifeBar, GRMng.frameHeightBaseLifeBar, GRMng.numAnimsBaseLifeBar, GRMng.frameCountBaseLifeBar,
+                GRMng.loopingBaseLifeBar, SuperGame.frameTime12, GRMng.textureBaseLifeBar, 2000/*Base life*/, screenEvolution);
 
             currentState = gameState.playing; // Change game's state to game mode
 
-            LvlMng.UnloadContent(lvl);
+            LvlMng.UnloadContent(cad);
             grManager.UnloadContent("MenuMain"); /// Unload the main menu's resources
         }
 
         /// <summary>
         /// Create a new Scroll
         /// </summary>
-        /// <param name="lvl">The number of the level</param>
-        public void newScroll(int lvl)
+        /// <param name="cad">The number of the level</param>
+        public void NewScroll(String cad)
         {
-            grManager.LoadContent("LevelB1"); // Load the gameB's level 1 resources
-            audio.LoadContent(1);
-            LvlMng.LoadContent(lvl); // Load the rectangles
+            Audio.StopMusic();
 
-            game = new GameB(this, player, 1, GRMng.textureAim,
-                /*ShipVelocity*/200f + 200, /*ShipLife*/100);
+            currentGameName = cad;
+
+            grManager.LoadHud();
+            grManager.LoadContent(cad); // Load the gameB's level 1 resources
+            audio.LoadContent(1);
+            LvlMng.LoadContent(cad); // Load the rectangles
+
+            game = new GameB(this, player, cad, GRMng.textureAim, screenEvolution);
 
             currentState = gameState.playing; // Change game's state to game mode
 
-            LvlMng.UnloadContent(lvl);
+            LvlMng.UnloadContent(cad);
+            grManager.UnloadContent("MenuMain"); /// Unload the main menu's resources
+        }
+
+
+        public void NewKillerMapEditor(String xmlPath)
+        {
+            Audio.StopMusic();
+
+            currentGameName = "LevelA1";
+
+            grManager.LoadHud();
+            grManager.LoadContent("LevelA1"); // Load the gameB's level 1 resources
+            audio.LoadContent(1);
+            LvlMng.LoadContent("LevelA1", xmlPath); // Load XML
+
+            game = new GameA(this, player, "LevelA1", GRMng.textureAim, GRMng.textureCell, screenEvolution);
+
+            currentState = gameState.playing; // Change game's state to game mode
+
+            LvlMng.UnloadContent("LevelA1");
             grManager.UnloadContent("MenuMain"); /// Unload the main menu's resources
         }
 
         /// <summary>
-        /// Puts gameState = playing
+        /// Puts gameState = pause and pause the music
+        /// </summary>
+        public void EnterPause()
+        {
+            Audio.PauseMusic();
+            currentState = gameState.pause;
+        }
+
+        /// <summary>
+        /// Puts gameState = playing and re-start music
         /// </summary>
         public void Resume()
         {
             currentState = gameState.playing;
+            Audio.ResumeMusic();
         }
 
         /// <summary>
@@ -605,21 +884,33 @@ namespace IS_XNA_Shooter
         /// </summary>
         public void EnterToMenu()
         {
+            Audio.PlayMusic(2);
             grManager.UnloadContent("MenuStart"); // unload the gamestartmenu
             currentState = gameState.mainMenu;
             menu.menuState = Menu.MenuState.main;
         }
-
+        
         /// <summary>
         /// Load the main menu content
         /// </summary>
         public void ExitToMenu()
         {
             grManager.LoadContent("MenuMain");
-            currentState = gameState.mainMenu;
+            //currentState = gameState.mainMenu;
+            currentState = gameState.starting;
             menu.menuState = Menu.MenuState.main;
             grManager.UnloadContentGame();
             audio.UnloadContent(1);
+            audio.LoadContent(0);
+            Audio.PlayMusic(2);
+
+            grManager.LoadContent("MenuStart"); // se cargan los recursos del menu start
+            grManager.LoadContent("MenuScores"); // se cargan los recursos del menu de scores
+            grManager.LoadContent("MenuIngame"); // se cargan los recursos del menu ingame
+            grManager.LoadContent("MenuGameOver");// se cargan los recursos del menu gameover
+            grManager.LoadContent("Other"); // all type of "little" resources
+            grManager.LoadContent("MapEditor"); //all contents to map editor
+            audio.LoadContent(0);
 
             player = new Player(playerLifes);
         }
@@ -629,7 +920,81 @@ namespace IS_XNA_Shooter
         /// </summary>
         public void GameOver()
         {
-            currentState = gameState.gameOver;
+            Audio.StopMusic();
+
+            if (currentGameName == "Story")
+            {
+                currentState = gameState.gameOver;
+            }
+            else // Arcade level played:
+            {
+                //Add new score
+                menuScores.AddNewScore(currentGameName, player.GetTotalScore());
+                currentState = gameState.scoresMenu;
+            }
+
+            // reset the player lives
+            player.EarnLife(playerLifes);
+            // reset the player score
+            player.ResetScore();
+
+        } // GameOver
+
+        private void LevelComplete()
+        {
+            //Audio.StopMusic();
+
+            if (currentGameName == "Story")
+            {
+                //Audio.StopMusic();
+                //currentState = gameState.mainMenu;
+                grManager.LoadContent("SplashCredits");
+                audio.LoadContent(2); // load the song for the credits
+                splashCredits.Initialize();
+                currentState = gameState.splashCredits;
+            } // Arcade level played:
+            else
+            {
+                //Add new score
+                Audio.StopMusic();
+                menuScores.AddNewScore(currentGameName, player.GetTotalScore());
+                currentState = gameState.scoresMenu;
+            }
+        } // LevelComplete
+
+        /// <summary>
+        /// This method is called from the MenuScores
+        /// </summary>
+        public void ReturnFromScores()
+        {
+            //currentState = gameState.mainMenu;
+            currentState = gameState.starting;
+
+            grManager.LoadContent("MenuStart"); // se cargan los recursos del menu start
+            grManager.LoadContent("MenuMain"); // se cargan los recursos del menu
+            grManager.LoadContent("MenuScores"); // se cargan los recursos del menu de scores
+            grManager.LoadContent("MenuIngame"); // se cargan los recursos del menu ingame
+            grManager.LoadContent("MenuGameOver");// se cargan los recursos del menu gameover
+            grManager.LoadContent("Other"); // all type of "little" resources
+            grManager.LoadContent("MapEditor"); //all contents to map editor
+            audio.LoadContent(0);
+        }
+
+        /// <summary>
+        /// Puts gameState = scoresMenu
+        /// </summary>
+        public void ShowScores()
+        {
+            currentState = gameState.scoresMenu;
+        }
+
+        /// <summary>
+        /// this method is called from the credits splash
+        /// </summary>
+        public void ReturnFromCredits()
+        {
+            //currentState = gameState.splashFinalDemo;
+            ExitToMenu();
         }
 
     } // class SuperGame
